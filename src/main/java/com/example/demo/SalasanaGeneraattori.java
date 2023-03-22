@@ -15,8 +15,22 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-
+/**
+ * SalasanaGeneraattori luokka on JavaFX-sovellus jonka tarkoituksena on generoida
+ * salasanoja käyttäjän asettamien valintojen perusteella. Käyttäjä voi valita, sisältääkö
+ * salasana isoja kirjaimia, pieniä kirjaimia, numeroita ja/tai erikoismerkkejä. Käyttäjä voi myös
+ * määrittää salasanan pituuden liukusäätimellä.
+ * Luokka käyttää Salasana- ja Salasanatiedosto luokkia salasanojen generoimiseen ja
+ * tallentamiseen tiedostoon. Generoidut salasanat näytetään käyttöliittymässä.
+ */
 public class SalasanaGeneraattori extends Application {
+
+    /**
+     * Alustetaan Salasana- ja Salasanatiedosto-oliot, määritellään JavaFX-käyttöliittymä
+     * GridPane-rakenteella ja lisätään erilaisia komponentteja, kuten valintaruudut
+     * (CheckBox) salasanan ominaisuuksille, liukusäädin (Slider) salasanan pituuden
+     * määrittämiseen ja tarvittavat tekstikentät ja -kentät.
+     */
     private Salasana salasana = new Salasana(12, true, true, true, true);
     private Salasanatiedosto salasanatiedosto = new Salasanatiedosto("salasanat.txt");
 
@@ -40,7 +54,7 @@ public class SalasanaGeneraattori extends Application {
         Label pituusLabel = new Label("Pituus:");
         gridPane.add(pituusLabel, 0, 2);
 
-        Slider pituusSlider = new Slider(10, 100, salasana.getPituus());
+        Slider pituusSlider = new Slider(10, 100, salasana.palautaPituus());
         pituusSlider.setShowTickLabels(true);
         pituusSlider.setShowTickMarks(true);
         pituusSlider.setMajorTickUnit(5);
@@ -50,18 +64,25 @@ public class SalasanaGeneraattori extends Application {
         pituusSlider.setPrefWidth(220);
         gridPane.add(pituusSlider, 1, 2);
 
-        TextField salasanaTextField = new TextField(salasana.getSalasana());
+        TextField salasanaTextField = new TextField(salasana.palautaSalasana());
         salasanaTextField.setEditable(false);
         salasanaTextField.setPromptText("Generoitu salasana");
         gridPane.add(salasanaTextField, 0, 3, 2, 1);
 
-        ChangeListener<Object> optionChangeListener = (observable, oldValue, newValue) -> {
+        /**
+         * Luodaan ChangeListener olio joka reagoi käyttäjän valintoihin (esim. valintaruutujen
+         * valinta, liukusäätimen arvojen muutos) ja päivittää Salasana-olion asetuksia.
+         * Kun asetukset on päivitetty, generoidaan uusi salasana ja näytetään se käyttöliittymän
+         * tekstikentässä. Jos käyttäjä ei ole valinnut vähintään yhtä merkkityyppiä niin näytetään
+         * virheviesti tekstikentässä.
+         */
+        ChangeListener<Object> valintaMuutinKuuntelija = (observable, oldValue, newValue) -> {
             try {
-                salasana.setPituus((int) pituusSlider.getValue());
-                salasana.setIsotKirjaimet(isotKirjaimetCheckBox.isSelected());
-                salasana.setPienetKirjaimet(pienetKirjaimetCheckBox.isSelected());
-                salasana.setNumerot(numerotCheckBox.isSelected());
-                salasana.setErikoismerkit(erikoismerkitCheckBox.isSelected());
+                salasana.asetaPituus((int) pituusSlider.getValue());
+                salasana.asetaIsotKirjaimet(isotKirjaimetCheckBox.isSelected());
+                salasana.asetaPienetKirjaimet(pienetKirjaimetCheckBox.isSelected());
+                salasana.asetaNumerot(numerotCheckBox.isSelected());
+                salasana.asetaErikoismerkit(erikoismerkitCheckBox.isSelected());
                 salasanaTextField.setText(salasana.generoiSalasana());
                 //Virheellinen valinnta mikäli henkilö ei ole valinnut vähintään yhtä checkboxia
             } catch (IllegalArgumentException e) {
@@ -69,29 +90,30 @@ public class SalasanaGeneraattori extends Application {
             }
         };
 
-        isotKirjaimetCheckBox.selectedProperty().addListener(optionChangeListener);
-        pienetKirjaimetCheckBox.selectedProperty().addListener(optionChangeListener);
-        numerotCheckBox.selectedProperty().addListener(optionChangeListener);
-        erikoismerkitCheckBox.selectedProperty().addListener(optionChangeListener);
-        pituusSlider.valueProperty().addListener(optionChangeListener);
+        // Lisätään kuuntelija valintaruutujen ja liukusäätimen valintamuutosten seurantaan
+        isotKirjaimetCheckBox.selectedProperty().addListener(valintaMuutinKuuntelija);
+        pienetKirjaimetCheckBox.selectedProperty().addListener(valintaMuutinKuuntelija);
+        numerotCheckBox.selectedProperty().addListener(valintaMuutinKuuntelija);
+        erikoismerkitCheckBox.selectedProperty().addListener(valintaMuutinKuuntelija);
+        pituusSlider.valueProperty().addListener(valintaMuutinKuuntelija);
 
-
+        // Kenttä missä luodaan salasanan tallentamiseen tarkoitettu nappula.
         Button tallennaSalasanaButton = new Button("Tallenna salasana");
         tallennaSalasanaButton.setOnAction(e -> {
             salasanatiedosto.tallennaSalasana(salasanaTextField.getText());
         });
         gridPane.add(tallennaSalasanaButton, 0, 4);
-
+        // Kenttä missä luodaan salasanaan palauttamiseen tarkoitettu nappula.
         Button kopioiSalasanaButton = new Button("Kopioi salasana");
         kopioiSalasanaButton.setOnAction(e -> {
-            Clipboard clipboard = Clipboard.getSystemClipboard();
-            ClipboardContent content = new ClipboardContent();
-            content.putString(salasana.getSalasana());
-            clipboard.setContent(content);
+            Clipboard kopio = Clipboard.getSystemClipboard();
+            ClipboardContent sisalto = new ClipboardContent();
+            sisalto.putString(salasana.palautaSalasana());
+            kopio.setContent(sisalto);
         });
         gridPane.add(kopioiSalasanaButton, 1, 4);
 
-        Scene scene = new Scene(gridPane, 500, 300);
+        Scene scene = new Scene(gridPane, 400, 250);
         primaryStage.setTitle("Salasana Generaattori");
         primaryStage.setScene(scene);
         primaryStage.show();

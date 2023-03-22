@@ -1,15 +1,42 @@
 package com.example.demo;
 
-public abstract class SalasanaStrategia {
 
+/**
+ * SalasanaOlio on abstrakti luokka, joka määrittää perusominaisuudet ja rakenteen
+ * salasanojen generoimiseksi. Tämä luokka sisältää yhteiset attribuutit
+ * ja konstruktorin, joka alustaa nämä attribuutit.
+ * Perivät luokat voivat määrittää oman toteutuksensa salasanan generoimiseksi
+ * käyttämällä näitä attribuutteja ja luomalla konkreettisen generoiSalasana()-metodin.
+ */
+public abstract class SalasanaOlio {
+
+    //salasanan pituus
     protected int pituus;
-    protected boolean isotKirjaimet;
-    protected boolean pienetKirjaimet;
-    protected boolean numerot;
-    protected boolean erikoismerkit;
-    private String viimeisinSalasana;
 
-    public SalasanaStrategia(int pituus, boolean isotKirjaimet, boolean pienetKirjaimet, boolean numerot, boolean erikoismerkit) {
+    //salasanassa isoja kirjaimia true false
+    protected boolean isotKirjaimet;
+    //salasanassa pieniä kirjaimia true false
+    protected boolean pienetKirjaimet;
+    //salasanassa numeroita true false
+    protected boolean numerot;
+    //salasanassa erikoismerkit true false
+    protected boolean erikoismerkit;
+    //salasanan viimeisinsalasanan palautusta varten
+    private String viimeisinSalasana;
+    /**
+     *@param pituus salasanan pituus
+     *@param isotKirjaimet sisältääkö salasana isoja kirjaimia
+     *@param pienetKirjaimet sisältääkö salasana pieniä kirjaimia
+     *@param numerot sisältääkö salasana numeroita
+     *@param erikoismerkit sisältääkö salasana erikoismerkkejä
+     *
+     */
+    public SalasanaOlio(int pituus,
+                        boolean isotKirjaimet,
+                        boolean pienetKirjaimet,
+                        boolean numerot,
+                        boolean erikoismerkit)
+    {
         this.pituus = pituus;
         this.isotKirjaimet = isotKirjaimet;
         this.pienetKirjaimet = pienetKirjaimet;
@@ -24,7 +51,7 @@ public abstract class SalasanaStrategia {
      *
      * @return salasanan pituus
      */
-    public int getPituus() {
+    public int palautaPituus() {
         return pituus;
     }
 
@@ -33,7 +60,7 @@ public abstract class SalasanaStrategia {
      *
      * @param pituus salasanan pituus
      */
-    public void setPituus(int pituus) {
+    public void asetaPituus(int pituus) {
         this.pituus = pituus;
     }
 
@@ -42,7 +69,7 @@ public abstract class SalasanaStrategia {
      *
      * @return true jos salasana sisältää isoja kirjaimia muuten false
      */
-    public boolean isIsotKirjaimet() {
+    public boolean onkoIsotKirjaimet() {
         return isotKirjaimet;
     }
 
@@ -51,7 +78,7 @@ public abstract class SalasanaStrategia {
      *
      * @param isotKirjaimet true jos salasana sisältää isoja kirjaimia muuten false
      */
-    public void setIsotKirjaimet(boolean isotKirjaimet) {
+    public void asetaIsotKirjaimet(boolean isotKirjaimet) {
         this.isotKirjaimet = isotKirjaimet;
     }
 
@@ -60,7 +87,7 @@ public abstract class SalasanaStrategia {
      *
      * @return true jos salasana sisältää pieniä kirjaimia muuten false
      */
-    public boolean isPienetKirjaimet() {
+    public boolean onkoPienetKirjaimet() {
         return pienetKirjaimet;
     }
 
@@ -69,14 +96,14 @@ public abstract class SalasanaStrategia {
      *
      * @param pienetKirjaimet true jos salasana sisältää pieniä kirjaimia muuten false
      */
-    public void setPienetKirjaimet(boolean pienetKirjaimet) {
+    public void asetaPienetKirjaimet(boolean pienetKirjaimet) {
         this.pienetKirjaimet = pienetKirjaimet;
     }
 
     /**
      * @return true jos salasana sisältää numeroita muuten false
      */
-    public boolean isNumerot() {
+    public boolean onkoNumerot() {
         return numerot;
     }
 
@@ -85,7 +112,7 @@ public abstract class SalasanaStrategia {
      *
      * @param numerot true jos salasana sisältää numeroita muuten false
      */
-    public void setNumerot(boolean numerot) {
+    public void asetaNumerot(boolean numerot) {
         this.numerot = numerot;
     }
 
@@ -94,7 +121,7 @@ public abstract class SalasanaStrategia {
      *
      * @return true jos salasana sisältää erikoismerkkejä muuten false
      */
-    public boolean isErikoismerkit() {
+    public boolean onkoErikoismerkit() {
         return erikoismerkit;
     }
 
@@ -103,7 +130,7 @@ public abstract class SalasanaStrategia {
      *
      * @param erikoismerkit true jos salasana sisältää erikoismerkkejä muuten false
      */
-    public void setErikoismerkit(boolean erikoismerkit) {
+    public void asetaErikoismerkit(boolean erikoismerkit) {
         this.erikoismerkit = erikoismerkit;
     }
     /**
@@ -111,7 +138,7 @@ public abstract class SalasanaStrategia {
      *
      * @return viimeisin salasana
      * */
-    public String getSalasana() {
+    public String palautaSalasana() {
         return viimeisinSalasana;
     }
 }

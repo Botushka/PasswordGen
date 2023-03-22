@@ -4,22 +4,25 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 /**
- * Salasana-luokka joka generoi salasanoja annettujen valintojen perusteella.
+ * Salasana olioluokka joka generoi salasanoja annettujen valintojen perusteella.
  */
-public class Salasana extends SalasanaStrategia{
+public class Salasana extends SalasanaOlio{
 
     /**
-     * Luo uuden Salasana-olion ja generoi salasanan annettujen valintojen perusteella.
-     *
-     * @param pituus salasanan pituus
-     * @param isotKirjaimet sisältääkö salasana isoja kirjaimia
+     * @param pituus          salasanan pituus
+     * @param isotKirjaimet   sisältääkö salasana isoja kirjaimia
      * @param pienetKirjaimet sisältääkö salasana pieniä kirjaimia
-     * @param numerot sisältääkö salasana numeroita
-     * @param erikoismerkit sisältääkö salasana erikoismerkkejä
+     * @param numerot         sisältääkö salasana numeroita
+     * @param erikoismerkit   sisältääkö salasana erikoismerkkejä
      */
     public Salasana(int pituus, boolean isotKirjaimet, boolean pienetKirjaimet, boolean numerot, boolean erikoismerkit) {
         super(pituus, isotKirjaimet, pienetKirjaimet, numerot, erikoismerkit);
     }
+
+    /**
+     * Generoi salasana annettujen valintojen perusteella
+     * Jos kaikki ruudut tyhjiä niin virhe viestinä että pitää valita ainakin yksi
+     * */
 
     public String generoiSalasana() {
         StringBuilder salasana = new StringBuilder();
