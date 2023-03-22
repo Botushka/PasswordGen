@@ -29,6 +29,7 @@ public class Salasanatiedosto implements SalasanaGeneraattoriRajapinta {
     public void tallennaSalasana(String salasana) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(tiedostonNimi))) {
             writer.write(salasana);
+            //Mikäli tallentamisessa tapahtuu virhe niin kerro virhe viesti
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,6 +47,7 @@ public class Salasanatiedosto implements SalasanaGeneraattoriRajapinta {
             while ((line = reader.readLine()) != null) {
                 salasana.append(line);
             }
+            //Mikäli palauttamisessa tapahtuu virhe niin kerro virhe viesti
         } catch (IOException e) {
             e.printStackTrace();
         }

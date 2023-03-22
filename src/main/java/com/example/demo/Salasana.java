@@ -1,16 +1,13 @@
 package com.example.demo;
 
 import java.security.SecureRandom;
+import java.util.Random;
+
 /**
  * Salasana-luokka joka generoi salasanoja annettujen valintojen perusteella.
  */
-public class Salasana {
-    private int pituus;
-    private boolean isotKirjaimet;
-    private boolean pienetKirjaimet;
-    private boolean numerot;
-    private boolean erikoismerkit;
-    private String salasana;
+public class Salasana extends SalasanaStrategia{
+
     /**
      * Luo uuden Salasana-olion ja generoi salasanan annettujen valintojen perusteella.
      *
@@ -20,145 +17,34 @@ public class Salasana {
      * @param numerot sisältääkö salasana numeroita
      * @param erikoismerkit sisältääkö salasana erikoismerkkejä
      */
-    public Salasana(int pituus, boolean isotKirjaimet, boolean pienetKirjaimet, boolean numerot,
-                    boolean erikoismerkit) {
-        this.pituus = pituus;
-        this.isotKirjaimet = isotKirjaimet;
-        this.pienetKirjaimet = pienetKirjaimet;
-        this.numerot = numerot;
-        this.erikoismerkit = erikoismerkit;
-        this.salasana = generoiSalasana();
-    }
-    // Getterit ja setterit
-
-    /**
-     * Palauttaa salasanan pituuden.
-     *
-     * @return salasanan pituus
-     */
-    public int getPituus() {
-        return pituus;
+    public Salasana(int pituus, boolean isotKirjaimet, boolean pienetKirjaimet, boolean numerot, boolean erikoismerkit) {
+        super(pituus, isotKirjaimet, pienetKirjaimet, numerot, erikoismerkit);
     }
 
-    /**
-     * Asettaa salasanan pituuden.
-     *
-     * @param pituus salasanan pituus
-     */
-    public void setPituus(int pituus) {
-        this.pituus = pituus;
-    }
+    public String generoiSalasana() {
+        StringBuilder salasana = new StringBuilder();
+        Random random = new Random();
 
-    /**
-     * Tarkistaa sisältääkö salasana isoja kirjaimia.
-     *
-     * @return true jos salasana sisältää isoja kirjaimia muuten false
-     */
-    public boolean isIsotKirjaimet() {
-        return isotKirjaimet;
-    }
-
-    /**
-     * Asettaa salasanaan isoja kirjaimia.
-     *
-     * @param isotKirjaimet true jos salasana sisältää isoja kirjaimia muuten false
-     */
-    public void setIsotKirjaimet(boolean isotKirjaimet) {
-        this.isotKirjaimet = isotKirjaimet;
-    }
-
-    /**
-     * Tarkistaa sisältääkö salasana pieniä kirjaimia.
-     *
-     * @return true jos salasana sisältää pieniä kirjaimia muuten false
-     */
-    public boolean isPienetKirjaimet() {
-        return pienetKirjaimet;
-    }
-
-    /**
-     * asetetaan pieniä kirjaimia jos true
-     * @param pienetKirjaimet true jos salasana sisältää pieniä kirjaimia muuten false
-     */
-    public void setPienetKirjaimet(boolean pienetKirjaimet) {
-        this.pienetKirjaimet = pienetKirjaimet;
-    }
-
-    /**
-     * @return true jos salasana sisältää numeroita muuten false
-     */
-    public boolean isNumerot() {
-        return numerot;
-    }
-
-    /**
-     * Asettaa salasanaan numeroita jos true.
-     *
-     * @param numerot true jos salasana sisältää numeroita muuten false
-     */
-    public void setNumerot(boolean numerot) {
-        this.numerot = numerot;
-    }
-
-    /**
-     * Tarkistaa sisältääkö salasana erikoismerkkejä.
-     *
-     * @return true jos salasana sisältää erikoismerkkejä muuten false
-     */
-    public boolean isErikoismerkit() {
-        return erikoismerkit;
-    }
-
-    /**
-     * Asettaa salasanaan erikoismerkkejä jos true.
-     *
-     * @param erikoismerkit true jos salasana sisältää erikoismerkkejä muuten false
-     */
-    public void setErikoismerkit(boolean erikoismerkit) {
-        this.erikoismerkit = erikoismerkit;
-    }
-
-    public String getSalasana() {
-        return salasana;
-    }
-    /**
-     * Generoi salasanan annettujen valintojen perusteella.
-     * Inspiraatiota minun aikasemmista vko1-3 tehtävistä
-     * @return generoitu salasana
-     */
-    private String generoiSalasana() {
         String isot = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String pienet = "abcdefghijklmnopqrstuvwxyz";
-        String numerotMerkit = "0123456789";
-        String erikoismerkitMerkisto = "!@#$%^&*()_+-=[]{}|;':\",.<>?/";
-        StringBuilder merkistoBuilder = new StringBuilder();
-        if (isotKirjaimet) {
-            merkistoBuilder.append(isot);
-        }
-        if (pienetKirjaimet) {
-            merkistoBuilder.append(pienet);
-        }
-        if (numerot) {
-            merkistoBuilder.append(numerotMerkit);
-        }
-        if (erikoismerkit) {
-            merkistoBuilder.append(erikoismerkitMerkisto);
+        String numerot = "0123456789";
+        String erikoismerkit = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+        String valittuMerkisto = "";
+        if (this.isotKirjaimet) valittuMerkisto += isot;
+        if (this.pienetKirjaimet) valittuMerkisto += pienet;
+        if (this.numerot) valittuMerkisto += numerot;
+        if (this.erikoismerkit) valittuMerkisto += erikoismerkit;
+
+        if (valittuMerkisto.isEmpty()) {
+            throw new IllegalArgumentException("Valitse vähintään yksi merkkityyppi.");
         }
 
-        String merkisto = merkistoBuilder.toString();
-
-        //Virheellinen valinnta
-        if (merkisto.isEmpty()) {
-            throw new IllegalArgumentException("Valitse vähintään yksi merkkityyppi (isot kirjaimet, pienet kirjaimet, numerot tai erikoismerkit");
-        }
-        SecureRandom random = new SecureRandom();
-        StringBuilder salasanaBuilder = new StringBuilder(pituus);
-        for (int i = 0; i < pituus; i++) {
-            int maara = random.nextInt(merkisto.length());
-            salasanaBuilder.append(merkisto.charAt(maara));
+        for (int i = 0; i < this.pituus; i++) {
+            int randomIndex = random.nextInt(valittuMerkisto.length());
+            salasana.append(valittuMerkisto.charAt(randomIndex));
         }
 
-        return salasanaBuilder.toString();
-
+        return salasana.toString();
     }
 }

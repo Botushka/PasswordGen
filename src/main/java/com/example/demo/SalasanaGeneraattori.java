@@ -1,15 +1,24 @@
 package com.example.demo;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class SalasanaGeneraattori extends Application implements SalasanaGeneraattoriRajapinta{
+import java.io.IOException;
 
-    private Salasana salasana;
+public class SalasanaGeneraattori extends Application {
+    private Salasana salasana = new Salasana(12, true, true, true, true);
+    private Salasanatiedosto salasanatiedosto = new Salasanatiedosto("salasanat.txt");
 
     @Override
     public void start(Stage primaryStage) {
@@ -31,40 +40,56 @@ public class SalasanaGeneraattori extends Application implements SalasanaGeneraa
         Label pituusLabel = new Label("Pituus:");
         gridPane.add(pituusLabel, 0, 2);
 
-        Slider pituusSlider = new Slider(10, 100, 12);
+        Slider pituusSlider = new Slider(10, 100, salasana.getPituus());
         pituusSlider.setShowTickLabels(true);
         pituusSlider.setShowTickMarks(true);
         pituusSlider.setMajorTickUnit(5);
         pituusSlider.setMinorTickCount(5);
         pituusSlider.setBlockIncrement(1);
         pituusSlider.setSnapToTicks(true);
-        pituusSlider.setPrefWidth(200);
+        pituusSlider.setPrefWidth(220);
         gridPane.add(pituusSlider, 1, 2);
 
-        TextField salasanaTextField = new TextField();
+        TextField salasanaTextField = new TextField(salasana.getSalasana());
         salasanaTextField.setEditable(false);
         salasanaTextField.setPromptText("Generoitu salasana");
         gridPane.add(salasanaTextField, 0, 3, 2, 1);
 
-
-        Runnable paivitaSalasana = () -> {
+        ChangeListener<Object> optionChangeListener = (observable, oldValue, newValue) -> {
             try {
-                salasana = new Salasana((int) pituusSlider.getValue(),
-                        isotKirjaimetCheckBox.isSelected(),
-                        pienetKirjaimetCheckBox.isSelected(),
-                        numerotCheckBox.isSelected(),
-                        erikoismerkitCheckBox.isSelected());
-                salasanaTextField.setText(salasana.getSalasana());
+                salasana.setPituus((int) pituusSlider.getValue());
+                salasana.setIsotKirjaimet(isotKirjaimetCheckBox.isSelected());
+                salasana.setPienetKirjaimet(pienetKirjaimetCheckBox.isSelected());
+                salasana.setNumerot(numerotCheckBox.isSelected());
+                salasana.setErikoismerkit(erikoismerkitCheckBox.isSelected());
+                salasanaTextField.setText(salasana.generoiSalasana());
+                //Virheellinen valinnta mikäli henkilö ei ole valinnut vähintään yhtä checkboxia
             } catch (IllegalArgumentException e) {
-                salasanaTextField.setText("Virheellinen valinta: Valitse vähintään yksi merkkityyppi");
+                salasanaTextField.setText(e.getMessage());
             }
         };
 
-        isotKirjaimetCheckBox.setOnAction(e -> paivitaSalasana.run());
-        pienetKirjaimetCheckBox.setOnAction(e -> paivitaSalasana.run());
-        numerotCheckBox.setOnAction(e -> paivitaSalasana.run());
-        erikoismerkitCheckBox.setOnAction(e -> paivitaSalasana.run());
-        pituusSlider.valueProperty().addListener((observable, oldValue, newValue) -> paivitaSalasana.run());
+        isotKirjaimetCheckBox.selectedProperty().addListener(optionChangeListener);
+        pienetKirjaimetCheckBox.selectedProperty().addListener(optionChangeListener);
+        numerotCheckBox.selectedProperty().addListener(optionChangeListener);
+        erikoismerkitCheckBox.selectedProperty().addListener(optionChangeListener);
+        pituusSlider.valueProperty().addListener(optionChangeListener);
+
+
+        Button tallennaSalasanaButton = new Button("Tallenna salasana");
+        tallennaSalasanaButton.setOnAction(e -> {
+            salasanatiedosto.tallennaSalasana(salasanaTextField.getText());
+        });
+        gridPane.add(tallennaSalasanaButton, 0, 4);
+
+        Button kopioiSalasanaButton = new Button("Kopioi salasana");
+        kopioiSalasanaButton.setOnAction(e -> {
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            ClipboardContent content = new ClipboardContent();
+            content.putString(salasana.getSalasana());
+            clipboard.setContent(content);
+        });
+        gridPane.add(kopioiSalasanaButton, 1, 4);
 
         Scene scene = new Scene(gridPane, 500, 300);
         primaryStage.setTitle("Salasana Generaattori");
@@ -76,23 +101,4 @@ public class SalasanaGeneraattori extends Application implements SalasanaGeneraa
         launch(args);
     }
 
-    /**
-     * Tallentaa annetun salasanan tiedostoon.
-     *
-     * @param salasana tallennettava salasana.
-     */
-    @Override
-    public void tallennaSalasana(String salasana) {
-
-    }
-
-    /**
-     * Etsii salasanan tiedostosta ja palauttaa sen.
-     *
-     * @return palautettava salasana.
-     */
-    @Override
-    public String palautaSalasana() {
-        return null;
-    }
 }
