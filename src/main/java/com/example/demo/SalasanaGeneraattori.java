@@ -37,23 +37,23 @@ public class SalasanaGeneraattori extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        GridPane gridPane = new GridPane();
-        gridPane.setPadding(new Insets(10, 10, 10, 10));
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
+        GridPane gpaneeli = new GridPane();
+        gpaneeli.setPadding(new Insets(10, 10, 10, 10));
+        gpaneeli.setHgap(10);
+        gpaneeli.setVgap(10);
 
         CheckBox isotKirjaimetCheckBox = new CheckBox("Isot kirjaimet");
         CheckBox pienetKirjaimetCheckBox = new CheckBox("Pienet kirjaimet");
         CheckBox numerotCheckBox = new CheckBox("Numerot");
         CheckBox erikoismerkitCheckBox = new CheckBox("Erikoismerkit");
 
-        gridPane.add(isotKirjaimetCheckBox, 0, 0);
-        gridPane.add(pienetKirjaimetCheckBox, 1, 0);
-        gridPane.add(numerotCheckBox, 0, 1);
-        gridPane.add(erikoismerkitCheckBox, 1, 1);
+        gpaneeli.add(isotKirjaimetCheckBox, 0, 0);
+        gpaneeli.add(pienetKirjaimetCheckBox, 1, 0);
+        gpaneeli.add(numerotCheckBox, 0, 1);
+        gpaneeli.add(erikoismerkitCheckBox, 1, 1);
 
         Label pituusLabel = new Label("Pituus:");
-        gridPane.add(pituusLabel, 0, 2);
+        gpaneeli.add(pituusLabel, 0, 2);
 
         Slider pituusSlider = new Slider(10, 100, salasana.palautaPituus());
         pituusSlider.setShowTickLabels(true);
@@ -63,12 +63,12 @@ public class SalasanaGeneraattori extends Application {
         pituusSlider.setBlockIncrement(1);
         pituusSlider.setSnapToTicks(true);
         pituusSlider.setPrefWidth(220);
-        gridPane.add(pituusSlider, 1, 2);
+        gpaneeli.add(pituusSlider, 1, 2);
 
         TextField salasanaTextField = new TextField(salasana.palautaSalasana());
         salasanaTextField.setEditable(false);
         salasanaTextField.setPromptText("Generoitu salasana");
-        gridPane.add(salasanaTextField, 0, 3, 2, 1);
+        gpaneeli.add(salasanaTextField, 0, 3, 2, 1);
 
         /**
          * Luodaan ChangeListener olio joka reagoi käyttäjän valintoihin (esim. valintaruutujen
@@ -105,7 +105,7 @@ public class SalasanaGeneraattori extends Application {
             salasana.viimeisinSalasana = salasanaTextField.getText();
             salasanaTiedosto.tallennaSalasana(salasanaTextField.getText());
         });
-        gridPane.add(tallennaSalasanaButton, 0, 4);
+        gpaneeli.add(tallennaSalasanaButton, 0, 4);
         // Kenttä missä luodaan salasanaan palauttamiseen tarkoitettu nappula.
         Button kopioiSalasanaButton = new Button("Kopioi salasana");
         kopioiSalasanaButton.setOnAction(e -> {
@@ -114,9 +114,9 @@ public class SalasanaGeneraattori extends Application {
             sisalto.putString(salasana.palautaSalasana());
             kopio.setContent(sisalto);
         });
-        gridPane.add(kopioiSalasanaButton, 1, 4);
+        gpaneeli.add(kopioiSalasanaButton, 1, 4);
 
-        Scene scene = new Scene(gridPane, 400, 250);
+        Scene scene = new Scene(gpaneeli, 400, 250);
         primaryStage.setTitle("Salasana Generaattori");
         primaryStage.setScene(scene);
         primaryStage.show();
