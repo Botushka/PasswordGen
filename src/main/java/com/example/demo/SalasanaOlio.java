@@ -22,7 +22,7 @@ public abstract class SalasanaOlio {
     //salasanassa erikoismerkit true false
     protected boolean erikoismerkit;
     //salasanan viimeisinsalasanan palautusta varten
-    private String viimeisinSalasana;
+    public String viimeisinSalasana;
     /**
      *@param pituus salasanan pituus
      *@param isotKirjaimet sisältääkö salasana isoja kirjaimia

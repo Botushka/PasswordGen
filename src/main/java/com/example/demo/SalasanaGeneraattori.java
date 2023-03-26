@@ -32,7 +32,8 @@ public class SalasanaGeneraattori extends Application {
      * määrittämiseen ja tarvittavat tekstikentät ja -kentät.
      */
     private Salasana salasana = new Salasana(12, true, true, true, true);
-    private Salasanatiedosto salasanatiedosto = new Salasanatiedosto("salasanat.txt");
+    private Salasanatiedosto salasanaTiedosto = new Salasanatiedosto("salasanat.txt");
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -100,7 +101,8 @@ public class SalasanaGeneraattori extends Application {
         // Kenttä missä luodaan salasanan tallentamiseen tarkoitettu nappula.
         Button tallennaSalasanaButton = new Button("Tallenna salasana");
         tallennaSalasanaButton.setOnAction(e -> {
-            salasanatiedosto.tallennaSalasana(salasanaTextField.getText());
+            salasana.viimeisinSalasana = salasanaTextField.getText();
+            salasanaTiedosto.tallennaSalasana(salasanaTextField.getText());
         });
         gridPane.add(tallennaSalasanaButton, 0, 4);
         // Kenttä missä luodaan salasanaan palauttamiseen tarkoitettu nappula.
@@ -119,6 +121,9 @@ public class SalasanaGeneraattori extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Projektin pääohjelma
+     * */
     public static void main(String[] args) {
         launch(args);
     }

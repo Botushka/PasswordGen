@@ -43,9 +43,9 @@ public class Salasanatiedosto implements SalasanaGeneraattoriRajapinta {
     public String palautaSalasana() {
         StringBuilder salasana = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(tiedostonNimi))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                salasana.append(line);
+            String teksti;
+            while ((teksti = reader.readLine()) != null) {
+                salasana.append(teksti);
             }
             //Mikäli palauttamisessa tapahtuu virhe niin kerro virhe viesti
         } catch (IOException e) {
