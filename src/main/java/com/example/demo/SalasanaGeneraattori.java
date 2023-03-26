@@ -31,8 +31,8 @@ public class SalasanaGeneraattori extends Application {
      * (CheckBox) salasanan ominaisuuksille, liukusäädin (Slider) salasanan pituuden
      * määrittämiseen ja tarvittavat tekstikentät ja -kentät.
      */
-    private Salasana salasana = new Salasana(12, true, true, true, true);
-    private Salasanatiedosto salasanaTiedosto = new Salasanatiedosto("salasanat.txt");
+    private final Salasana SALASANA = new Salasana(12, true, true, true, true);
+    private final Salasanatiedosto SALASANATIEDOSTO = new Salasanatiedosto("salasanat.txt");
 
 
     @Override
@@ -55,7 +55,7 @@ public class SalasanaGeneraattori extends Application {
         Label pituusLabel = new Label("Pituus:");
         gpaneeli.add(pituusLabel, 0, 2);
 
-        Slider pituusSlider = new Slider(10, 100, salasana.palautaPituus());
+        Slider pituusSlider = new Slider(10, 100, SALASANA.palautaPituus());
         pituusSlider.setShowTickLabels(true);
         pituusSlider.setShowTickMarks(true);
         pituusSlider.setMajorTickUnit(5);
@@ -65,7 +65,7 @@ public class SalasanaGeneraattori extends Application {
         pituusSlider.setPrefWidth(220);
         gpaneeli.add(pituusSlider, 1, 2);
 
-        TextField salasanaTextField = new TextField(salasana.palautaSalasana());
+        TextField salasanaTextField = new TextField(SALASANA.palautaSalasana());
         salasanaTextField.setEditable(false);
         salasanaTextField.setPromptText("Generoitu salasana");
         gpaneeli.add(salasanaTextField, 0, 3, 2, 1);
@@ -80,12 +80,12 @@ public class SalasanaGeneraattori extends Application {
          */
         ChangeListener<Object> valintaMuutinKuuntelija = (observable, oldValue, newValue) -> {
             try {
-                salasana.asetaPituus((int) pituusSlider.getValue());
-                salasana.asetaIsotKirjaimet(isotKirjaimetCheckBox.isSelected());
-                salasana.asetaPienetKirjaimet(pienetKirjaimetCheckBox.isSelected());
-                salasana.asetaNumerot(numerotCheckBox.isSelected());
-                salasana.asetaErikoismerkit(erikoismerkitCheckBox.isSelected());
-                salasanaTextField.setText(salasana.generoiSalasana());
+                SALASANA.asetaPituus((int) pituusSlider.getValue());
+                SALASANA.asetaIsotKirjaimet(isotKirjaimetCheckBox.isSelected());
+                SALASANA.asetaPienetKirjaimet(pienetKirjaimetCheckBox.isSelected());
+                SALASANA.asetaNumerot(numerotCheckBox.isSelected());
+                SALASANA.asetaErikoismerkit(erikoismerkitCheckBox.isSelected());
+                salasanaTextField.setText(SALASANA.generoiSalasana());
                 //Virheellinen valinnta mikäli henkilö ei ole valinnut vähintään yhtä checkboxia
             } catch (IllegalArgumentException e) {
                 salasanaTextField.setText(e.getMessage());
@@ -102,8 +102,8 @@ public class SalasanaGeneraattori extends Application {
         // Kenttä missä luodaan salasanan tallentamiseen tarkoitettu nappula.
         Button tallennaSalasanaButton = new Button("Tallenna salasana");
         tallennaSalasanaButton.setOnAction(e -> {
-            salasana.viimeisinSalasana = salasanaTextField.getText();
-            salasanaTiedosto.tallennaSalasana(salasanaTextField.getText());
+            SALASANA.viimeisinSalasana = salasanaTextField.getText();
+            SALASANATIEDOSTO.tallennaSalasana(salasanaTextField.getText());
         });
         gpaneeli.add(tallennaSalasanaButton, 0, 4);
         // Kenttä missä luodaan salasanaan palauttamiseen tarkoitettu nappula.
@@ -111,7 +111,7 @@ public class SalasanaGeneraattori extends Application {
         kopioiSalasanaButton.setOnAction(e -> {
             Clipboard kopio = Clipboard.getSystemClipboard();
             ClipboardContent sisalto = new ClipboardContent();
-            sisalto.putString(salasana.palautaSalasana());
+            sisalto.putString(SALASANA.palautaSalasana());
             kopio.setContent(sisalto);
         });
         gpaneeli.add(kopioiSalasanaButton, 1, 4);
