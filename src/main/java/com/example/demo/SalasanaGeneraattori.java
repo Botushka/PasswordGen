@@ -76,6 +76,7 @@ public class SalasanaGeneraattori extends Application {
          * Kun asetukset on päivitetty, generoidaan uusi salasana ja näytetään se käyttöliittymän
          * tekstikentässä. Jos käyttäjä ei ole valinnut vähintään yhtä merkkityyppiä niin näytetään
          * virheviesti tekstikentässä.
+         * @throws Virheellinen valinnta mikäli henkilö ei ole valinnut vähintään yhtä checkboxia
          */
         ChangeListener<Object> valintaMuutinKuuntelija = (observable, oldValue, newValue) -> {
             try {

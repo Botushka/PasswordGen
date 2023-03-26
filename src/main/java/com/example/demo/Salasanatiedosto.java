@@ -25,6 +25,7 @@ public class Salasanatiedosto implements SalasanaGeneraattoriRajapinta {
      * Tallentaa annetun salasanan tiedostoon.
      *
      * @param salasana tallennettava salasana.
+     * @throws IOException mikäli tallennuksessa tapahtuu virhe
      */
     public void tallennaSalasana(String salasana) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(tiedostonNimi))) {
@@ -39,6 +40,7 @@ public class Salasanatiedosto implements SalasanaGeneraattoriRajapinta {
      * Etsii salasanan tiedostosta ja palauttaa sen.
      *
      * @return palautettava salasana.
+     * @throws IOException mikäli palauttamisessa tapahtuu virhe.
      */
     public String palautaSalasana() {
         StringBuilder salasana = new StringBuilder();
